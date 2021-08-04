@@ -91,11 +91,17 @@ namespace melatonin
        x = zero crossing
        E = out of bounds (below -1.0 or above 1.0)
 
+       If maxNumSamples is not 0, the displayed section of the buffer will be truncated
      */
     template <typename SampleType>
-    static inline juce::String sparkline (const AudioBlock<SampleType>& block, bool collapse = true, bool normalize = true)
+    static inline juce::String sparkline (AudioBlock<SampleType> block, bool collapse = true, bool normalize = true, size_t maxNumSamples = 0)
     {
         juce::String sparkline = summaryOf (block);
+
+        if (maxNumSamples)
+            block = block.getSubBlock (0, maxNumSamples);
+
+
         for (int c = 0; c < (int) block.getNumChannels(); ++c)
         {
             // Xcode and MacOS Terminal font rendering flips the height of ‾ and ⎺
